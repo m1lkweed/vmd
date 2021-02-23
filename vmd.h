@@ -1,4 +1,4 @@
-// (c)m1lkweed 2021 GPLv3+
+// (c)m1lkweed 2021 MIT License
 
 #ifndef _VMD_H_
 #define _VMD_H_
