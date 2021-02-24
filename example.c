@@ -16,7 +16,7 @@ int main(){
 	if(vmd_incontainer()){++clear; write(STDOUT_FILENO, k8s_string, sizeof(k8s_string));}
 	
 	if(!clear){
-		write(1, all_clear, sizeof(all_clear));
+		write(STDOUT_FILENO, all_clear, sizeof(all_clear));
 	}
 }
 
