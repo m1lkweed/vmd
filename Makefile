@@ -1,9 +1,19 @@
-CC=gcc
-CFLAGS="-Wall -Wextra -Werror -pedantic"
+CC     := gcc
+CFLAGS += -Wall -Wextra -Werror -Wno-unused-result -pedantic
 
-debug:clean
-	$(CC) $(CFLAGS) -fsanitize=leak,address,undefined -g -o vmd example.c
-stable:clean
-	$(CC) $(CFLAGS) -O3 -o vmd example.c
+DEBUG_CFLAGS   ?= -Og -ggdb3 -fsanitize=address,undefined,leak 
+RELEASE_CFLAGS ?= -O3 -flto
+
+ifeq ($(DEBUG), 1)
+CFLAGS += $(DEBUG_CFLAGS)
+else
+CFLAGS += $(RELEASE_CFLAGS)
+endif
+
+.PHONY: clean
+
+vmd: example.c
+	$(CC) $(CFLAGS) -o $@ $< 
+
 clean:
 	rm -vfr *~ vmd
