@@ -52,8 +52,17 @@ bool vmd_dbgpresent(void){
 		syscall(SYS_kill, syscall(SYS_getpid), SIGTRAP);
 	t1 = __builtin_ia32_rdtscp(&junk);
 	syscall(SYS_rt_sigaction, SIGTRAP, (size_t)&old, (size_t)NULL, 8);
-	if(((t1 - t0) < 190000) && ((t1 - t0) > 1000))
+	if(((t1 - t0) < 190000) && ((t1 - t0) > 1000)){
+		int failsafe = 0;
+		if(syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1)
+			failsafe = 2;
+		if(syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1)
+			failsafe *= 3;
+		syscall(SYS_ptrace, PTRACE_DETACH, syscall(SYS_getpid), 0, 0);
+		if(failsafe == 6)
+			return true;
 		return false;
+	}
 	return true;
 }
 
