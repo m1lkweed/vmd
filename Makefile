@@ -10,14 +10,14 @@ else
 CFLAGS += $(RELEASE_CFLAGS)
 endif
 
-.PHONY: clean all gdb qemu docker
+.PHONY: clean all gdb qemu docker strace
 
 vmd: example.c
 	@$(CC) $(CFLAGS) -o $@ $<
 
 gdb: vmd
 	@printf $@": "
-	@gdb -q -x gdbscript ./$<
+	@gdb -q -x gdbscript --args ./$< $(ARGS)
 
 strace:vmd
 	@printf $@": "
