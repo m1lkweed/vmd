@@ -1,0 +1,4 @@
+set confirm off
+handle SIGTRAP nostop
+run
+quit
