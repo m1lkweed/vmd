@@ -10,10 +10,32 @@ else
 CFLAGS += $(RELEASE_CFLAGS)
 endif
 
-.PHONY: clean
+.PHONY: clean all gdb qemu docker
 
 vmd: example.c
-	$(CC) $(CFLAGS) -o $@ $< 
+	@$(CC) $(CFLAGS) -o $@ $<
 
-clean:
-	rm -vfr *~ vmd
+gdb: vmd
+	@printf $@": "
+	@gdb -q -x gdbscript ./$<
+
+strace:vmd
+	@printf $@": "
+	@strace ./$< 2>/dev/null
+
+qemu: vmd
+	@printf $@": "
+	@qemu-x86_64 -cpu max ./$<
+
+docker: vmd
+	@printf $@": "
+	@docker build -qt $< .
+	@docker run -it $<
+
+all: vmd strace qemu docker gdb
+	@printf $<": "
+	@./$<
+
+clean: vmd
+	@rm -vfr *~ $<
+	@sudo docker rmi -f $<
