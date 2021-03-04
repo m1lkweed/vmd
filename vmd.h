@@ -37,9 +37,7 @@ bool vmd_vmdetect(void){
 	);
 	t1 = __builtin_ia32_rdtscp(&junk);
 	signed long long fbstp_time = t1 - t0;
-	if((fbstp_time) >= cpuid_time)
-		return true;
-	return false;
+	return ((fbstp_time) >= cpuid_time);
 }
 
 /*time the length of a SIGTRAP*/
@@ -59,9 +57,7 @@ bool vmd_dbgpresent(void){
 		if(syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1)
 			failsafe *= 3;
 		syscall(SYS_ptrace, PTRACE_DETACH, syscall(SYS_getpid), 0, 0);
-		if(failsafe == 6)
-			return true;
-		return false;
+		return (failsafe == 6);
 	}
 	return true;
 }
@@ -72,9 +68,7 @@ bool vmd_inchroot(void){
 	struct stat a;
 	char *dir = "/";
 	syscall(SYS_stat, (size_t)dir, (size_t)&a);
-	if(a.st_ino == 2)
-		return false;
-	return true;
+	return (a.st_ino == 2);
 }
 
 /*tries to detect VMs by very low hardware specs*/
@@ -93,17 +87,13 @@ bool vmd_hardwaresus(void){
 	fclose(d);
 	size *= 512;
 	size /= 1024UL * 1024UL * 1024UL;
-	if(size <= 60) //< 60 GiB total on main drive
-		return true;
-	return false;
+	return (size <= 60); //< 60 GiB total on main drive
 }
 
 /*tries to detect containerization by pid*/
 bool vmd_incontainer(void){
 	ssize_t pid = syscall(SYS_getpid);
-	if(pid < 250)
-		return true;
-	return false;
+	return (pid < 250);
 }
 
 #endif //_VMD_H_
