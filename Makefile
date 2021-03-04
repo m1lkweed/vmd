@@ -37,5 +37,5 @@ all: vmd strace qemu docker gdb
 	@./$<
 
 clean: vmd
-	@rm -vfr *~ $<
-	@sudo docker rmi -f $<
+	@-rm -vfr *~ $<
+	@-docker rmi -f $<
