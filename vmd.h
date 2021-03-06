@@ -40,26 +40,23 @@ bool vmd_vmdetect(void){
 	return ((fbstp_time) >= cpuid_time);
 }
 
-/*time the length of a SIGTRAP*/
+/*double self-trace to detect/prevent debuggers LD_PRELOAD*/
+//TODO: In kernel 5.11 syscalls can now be captured, we should try reading from memory to confirm attachment.
 bool vmd_dbgpresent(void){
-	unsigned long long t0, t1;
-	unsigned junk;
-	struct sigaction old, new = {.sa_handler = SIG_IGN};
-	syscall(SYS_rt_sigaction, SIGTRAP, (size_t)&new, (size_t)&old, 8);
-	t0 = __builtin_ia32_rdtscp(&junk);
-		syscall(SYS_kill, syscall(SYS_getpid), SIGTRAP);
-	t1 = __builtin_ia32_rdtscp(&junk);
-	syscall(SYS_rt_sigaction, SIGTRAP, (size_t)&old, (size_t)NULL, 8);
-	if(((t1 - t0) < 190000) && ((t1 - t0) > 1000)){
-		int failsafe = 0;
-		if(syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1)
+	static bool self = false;
+	int failsafe = 0;
+
+	if(self == false){
+		if((syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1))
 			failsafe = 2;
-		if(syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1)
+		if((syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1))
 			failsafe *= 3;
+		if(failsafe == 6)
+			return true;
 		syscall(SYS_ptrace, PTRACE_DETACH, syscall(SYS_getpid), 0, 0);
-		return (failsafe == 6);
+		self = true;
 	}
-	return true;
+	return false;
 }
 
 // / should have an inode of 2 if not chrooted, not foolproof
@@ -68,7 +65,7 @@ bool vmd_inchroot(void){
 	struct stat a;
 	char *dir = "/";
 	syscall(SYS_stat, (size_t)dir, (size_t)&a);
-	return (a.st_ino == 2);
+	return (a.st_ino != 2);
 }
 
 /*tries to detect VMs by very low hardware specs*/
