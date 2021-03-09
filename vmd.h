@@ -16,6 +16,7 @@
 #include "syscall.h"
 
 /*cpuid takes 200 times longer in VMs while x87 insns are roughly the same*/
+//may fail to detect fully virtualized machines, need a second test
 bool vmd_vmdetect(void){
 	unsigned long long t0, t1;
 	unsigned junk = 0;
@@ -38,6 +39,21 @@ bool vmd_vmdetect(void){
 	t1 = __builtin_ia32_rdtscp(&junk);
 	signed long long fbstp_time = t1 - t0;
 	return ((fbstp_time) >= cpuid_time);
+}
+
+/*detects hypervisors via cpuid*/
+bool vmd_hvdetect(void){
+	unsigned junk = 0, hypervisor = 0;
+	__asm volatile("cpuid\n\t"
+	              :"=a" (junk),
+	               "=b" (junk),
+	               "=c" (hypervisor),
+	               "=d" (junk)
+	              :"0"  (1),
+	               "1"  (0),
+	               "2"  (0)
+	);		
+	return hypervisor & (unsigned)0x80000000;
 }
 
 /*double self-trace to detect/prevent debuggers LD_PRELOAD*/
