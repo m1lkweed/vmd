@@ -4,6 +4,8 @@ A small set of functions for RE detection on x86_64 Linux
 ### Functions:
 * `vmd_vmdetect()`
 detects virtual machines via `cpuid` and `rdtscp`
+* `vmd_hvdetect()`
+detects hypervisors via `cpuid`
 * `vmd_dbgpresent()`
 detects debuggers via `ptrace`
 * `vmd_inchroot()`
