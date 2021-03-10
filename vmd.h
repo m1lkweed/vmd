@@ -52,7 +52,7 @@ bool vmd_hvdetect(void){
 	              :"0"  (1),
 	               "1"  (0),
 	               "2"  (0)
-	);		
+	);
 	return hypervisor & (unsigned)0x80000000;
 }
 
@@ -96,6 +96,8 @@ bool vmd_hardwaresus(void){
 	if(a.uptime < (5 * 60)) //< 5 minutes of uptime
 		return true;
 	FILE *d = fopen("/sys/class/block/sda/size", "rx");
+	if(d == NULL)
+		return true; //treat live CDs as suspect
 	fscanf(d,"%"SCNu64, &size);
 	fclose(d);
 	size *= 512;
