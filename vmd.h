@@ -44,7 +44,7 @@ bool vmd_vmdetect(void){
 /*detects hypervisors via cpuid*/
 bool vmd_hvdetect(void){
 	unsigned junk = 0, hypervisor = 0;
-	__asm volatile("cpuid\n\t"
+	__asm volatile("cpuid"
 	              :"=a" (junk),
 	               "=b" (junk),
 	               "=c" (hypervisor),
