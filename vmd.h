@@ -38,7 +38,7 @@ bool vmd_vmdetect(void){
 	);
 	t1 = __builtin_ia32_rdtscp(&junk);
 	signed long long fbstp_time = t1 - t0;
-	return (fbstp_time >= cpuid_time) || (cpuid_time > 2000);
+	return (fbstp_time >= cpuid_time);
 }
 
 /*detects hypervisors via cpuid*/
