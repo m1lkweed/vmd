@@ -10,7 +10,7 @@ else
 CFLAGS += $(RELEASE_CFLAGS)
 endif
 
-.PHONY: clean all gdb qemu docker strace
+.PHONY: clean all gdb qemu docker strace valgrind
 
 vmd: example.c
 	@$(CC) $(CFLAGS) -o $@ $<
@@ -32,7 +32,11 @@ docker: vmd
 	@docker build -qt $< .
 	@docker run -it $<
 
-all: vmd strace qemu docker gdb
+valgrind: vmd
+	@printf $@": "
+	@valgrind ./$< 2>/dev/null
+
+all: vmd strace qemu docker gdb valgrind
 	@printf $<": "
 	@./$<
 
