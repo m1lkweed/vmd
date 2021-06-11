@@ -1,5 +1,5 @@
-#ifndef _INLINE_SYSCALL_H_
-#define _INLINE_SYSCALL_H_
+#ifndef INLINE_SYSCALL_H_
+#define INLINE_SYSCALL_H_
 
 #include <unistd.h>      //for ssize_t
 #include <sys/syscall.h> //for SYS_[name] definitions
@@ -71,7 +71,7 @@ static inline ssize_t _syscall3(int syscall, size_t arg0, size_t arg1, size_t ar
 
 static inline ssize_t _syscall4(int syscall, size_t arg0, size_t arg1, size_t arg2, size_t arg3){
 	ssize_t ret;
-	register long r10 __asm("r10") = arg3;
+	register unsigned long r10 __asm("r10") = arg3;
 	__asm volatile("syscall"
 	              :"=a" (ret)   // rax
 	              :"a"(syscall),// rax
@@ -88,8 +88,8 @@ static inline ssize_t _syscall4(int syscall, size_t arg0, size_t arg1, size_t ar
 
 static inline ssize_t _syscall5(int syscall, size_t arg0, size_t arg1, size_t arg2, size_t arg3, size_t arg4){
 	ssize_t ret;
-	register long r10 __asm("r10") = arg3;
-	register long r8  __asm("r8")  = arg4;
+	register unsigned long r10 __asm("r10") = arg3;
+	register unsigned long r8  __asm("r8")  = arg4;
 	__asm volatile("syscall"
 	              :"=a" (ret)   // rax
 	              :"a"(syscall),// rax
@@ -107,9 +107,9 @@ static inline ssize_t _syscall5(int syscall, size_t arg0, size_t arg1, size_t ar
 
 static inline ssize_t _syscall6(int syscall, size_t arg0, size_t arg1, size_t arg2, size_t arg3, size_t arg4, size_t arg5){
 	ssize_t ret;
-	register long r10 __asm("r10") = arg3;
-	register long r8  __asm("r8")  = arg4;
-	register long r9  __asm("r9")  = arg5;
+	register unsigned long r10 __asm("r10") = arg3;
+	register unsigned long r8  __asm("r8")  = arg4;
+	register unsigned long r9  __asm("r9")  = arg5;
 	__asm volatile("syscall"
 	              :"=a" (ret)   // rax
 	              :"a"(syscall),// rax
@@ -126,4 +126,4 @@ static inline ssize_t _syscall6(int syscall, size_t arg0, size_t arg1, size_t ar
 	return ret;
 }
 
-#endif //_INLINE_SYSCALL_H_
+#endif //INLINE_SYSCALL_H_
