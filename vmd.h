@@ -1,7 +1,7 @@
 // (c)m1lkweed 2021 MIT License
 
-#ifndef _VMD_H_
-#define _VMD_H_
+#ifndef VMD_H_
+#define VMD_H_
 
 #include <stdio.h>
 #include <unistd.h>
@@ -32,7 +32,7 @@ bool vmd_vmdetect(void){
 	               "=d" (junk)
 	);
 	t1 = __builtin_ia32_rdtscp(&junk);
-	signed long long cpuid_time = t1 - t0;
+	unsigned long long cpuid_time = t1 - t0;
 	t0 = __builtin_ia32_rdtscp(&junk);
 	__asm volatile("fbstp %0"
 	              :"=m" (junk)
@@ -40,7 +40,7 @@ bool vmd_vmdetect(void){
 	              :"st"
 	);
 	t1 = __builtin_ia32_rdtscp(&junk);
-	signed long long fbstp_time = t1 - t0;
+	unsigned long long fbstp_time = t1 - t0;
 	return (fbstp_time >= cpuid_time) || (cpuid_time > 2000);
 }
 
@@ -72,7 +72,7 @@ bool vmd_dbgpresent(void){
 			failsafe *= 3;
 		if(failsafe == 6)
 			return true;
-		syscall(SYS_ptrace, PTRACE_DETACH, syscall(SYS_getpid), 0, 0);
+		syscall(SYS_ptrace, PTRACE_DETACH, (unsigned)syscall(SYS_getpid), 0, 0);
 		self = true;
 	}
 	return false;
@@ -94,9 +94,9 @@ bool vmd_hardwaresus(void){
 	if(get_nprocs_conf() < 2)
 		return true;
 	sysinfo(&a);
-	if((a.totalram/(1024UL * 1024UL * 1024UL)) < 1) //< 1 GiB of RAM
+	if((a.totalram/(1024UL * 1024UL * 1024UL)) < 1) // < 1 GiB of RAM
 		return true;
-	if(a.uptime < (5 * 60)) //< 5 minutes of uptime
+	if(a.uptime < (5 * 60)) // < 5 minutes of uptime
 		return true;
 	FILE *d = fopen("/sys/class/block/sda/size", "rx");
 	if(d == NULL)
@@ -105,7 +105,7 @@ bool vmd_hardwaresus(void){
 	fclose(d);
 	size *= 512;
 	size /= 1024UL * 1024UL * 1024UL;
-	return (size <= 60); //< 60 GiB total on main drive
+	return (size <= 60); // < 60 GiB total on main drive
 }
 
 /*tries to detect containerization by pid*/
