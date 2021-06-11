@@ -21,6 +21,9 @@ bool vmd_vmdetect(void){
 	unsigned long long t0, t1;
 	unsigned junk = 0;
 	double fjunk = 0;
+	/*small address filter so valgrind doesn't reach the SIGILL*/
+	if(&t0 < (unsigned long long*)0x7ff000000000)
+		return true;
 	t0 = __builtin_ia32_rdtscp(&junk);
 	__asm volatile("cpuid"
 	              :"=a" (junk),
@@ -38,7 +41,7 @@ bool vmd_vmdetect(void){
 	);
 	t1 = __builtin_ia32_rdtscp(&junk);
 	signed long long fbstp_time = t1 - t0;
-	return (fbstp_time >= cpuid_time);
+	return (fbstp_time >= cpuid_time) || (cpuid_time > 2000);
 }
 
 /*detects hypervisors via cpuid*/
