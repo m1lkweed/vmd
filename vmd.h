@@ -3,11 +3,21 @@
 #ifndef VMD_H_
 #define VMD_H_
 
+#include <stdbool.h>
+
+bool vmd_vmdetect(void);
+bool vmd_hvdetect(void);
+bool vmd_dbgpresent(void);
+bool vmd_inchroot(void);
+bool vmd_hardwaresus(void);
+bool vmd_incontainer(void);
+
+#ifdef VMD_IMPLEMENTATION
+
 #include <stdio.h>
 #include <unistd.h>
 #include <signal.h>
 #include <stdint.h>
-#include <stdbool.h>
 #include <sys/stat.h>
 #include <inttypes.h>
 #include <sys/ptrace.h>
@@ -56,7 +66,7 @@ bool vmd_hvdetect(void){
 	               "1"  (0),
 	               "2"  (0)
 	);
-	return hypervisor & (unsigned)0x80000000;
+	return hypervisor & 0x80000000;
 }
 
 /*double self-trace to detect/prevent debuggers LD_PRELOAD*/
@@ -114,4 +124,5 @@ bool vmd_incontainer(void){
 	return (pid < 250);
 }
 
-#endif //_VMD_H_
+#endif //VMD_IMPLEMENTATION
+#endif //VMD_H_
