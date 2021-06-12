@@ -1,3 +1,4 @@
+#define VMD_IMPLEMENTATION
 #include "vmd.h"
 #include "syscall.h" //syscall by numbers for better inlining
 
