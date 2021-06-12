@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #define VMD_IMPLEMENTATION
 #include "vmd.h"
 #include "syscall.h" //syscall by numbers for better inlining
@@ -11,14 +13,14 @@ int main(){
 	const char k8s_string[] = "Container detected\n";
 	const char  all_clear[] = "Nothing detected\n";
 	int clear = 0;
-	if(vmd_vmdetect())   {++clear; write(STDOUT_FILENO,  vm_string, sizeof( vm_string));}
-	if(vmd_hvdetect())   {++clear; write(STDOUT_FILENO,  hv_string, sizeof( hv_string));}
-	if(vmd_dbgpresent()) {++clear; write(STDOUT_FILENO, dbg_string, sizeof(dbg_string));}
-	if(vmd_inchroot())   {++clear; write(STDOUT_FILENO, chr_string, sizeof(chr_string));}
-	if(vmd_hardwaresus()){++clear; write(STDOUT_FILENO, hws_string, sizeof(hws_string));}
-	if(vmd_incontainer()){++clear; write(STDOUT_FILENO, k8s_string, sizeof(k8s_string));}
+	if(vmd_vmdetect())   {++clear; puts( vm_string);}
+	if(vmd_hvdetect())   {++clear; puts( hv_string);}
+	if(vmd_dbgpresent()) {++clear; puts(dbg_string);}
+	if(vmd_inchroot())   {++clear; puts(chr_string);}
+	if(vmd_hardwaresus()){++clear; puts(hws_string);}
+	if(vmd_incontainer()){++clear; puts(k8s_string);}
 	
 	if(!clear){
-		write(STDOUT_FILENO, all_clear, sizeof(all_clear));
+		puts(all_clear);
 	}
 }
