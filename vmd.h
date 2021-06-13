@@ -70,16 +70,16 @@ bool vmd_hvdetect(void){
 }
 
 /*double self-trace to detect/prevent debuggers LD_PRELOAD*/
-//TODO: In kernel 5.11 syscalls can now be captured, we should try reading from memory to confirm attachment.
 bool vmd_dbgpresent(void){
 	int failsafe = 0;
 	if((syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1))
 		failsafe = 2;
 	if((syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1))
 		failsafe *= 3;
-	if(failsafe == 6)
+	
+	if(failsafe == 6 && syscall(SYS_ptrace, PTRACE_PEEKDATA, syscall(SYS_getpid), (uintptr_t)&failsafe, 0) == failsafe)
 		return true;
-	syscall(SYS_ptrace, PTRACE_DETACH, (unsigned)syscall(SYS_getpid), 0, 0);
+	syscall(SYS_ptrace, PTRACE_DETACH, syscall(SYS_getpid), 0, 0);
 	return false;
 }
 
@@ -96,7 +96,7 @@ bool vmd_inchroot(void){
 bool vmd_hardwaresus(void){
 	struct sysinfo a;
 	uint64_t size;
-	if(get_nprocs_conf() < 2)
+	if(sysconf(_SC_NPROCESSORS_CONF) < 2)
 		return true;
 	sysinfo(&a);
 	if((a.totalram/(1024UL * 1024UL * 1024UL)) < 1) // < 1 GiB of RAM
