@@ -31,6 +31,7 @@ docker: vmd
 	@printf $@": "
 	@docker build -qt $< .
 	@docker run -it $<
+	@-docker rmi -f $<
 
 valgrind: vmd
 	@printf $@": "
@@ -42,4 +43,3 @@ all: vmd strace qemu docker gdb valgrind
 
 clean: vmd
 	@-rm -vfr *~ $<
-	@-docker rmi -f $<
