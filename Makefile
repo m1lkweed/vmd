@@ -17,7 +17,7 @@ vmd: example.c
 
 gdb: vmd
 	@printf $@": "
-	@gdb -q -x gdbscript --args ./$< $(ARGS)
+	@gdb -batch-silent -x gdbscript --args ./$< $(ARGS)
 
 strace:vmd
 	@printf $@": "
