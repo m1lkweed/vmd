@@ -1,6 +1,7 @@
+CC     := gcc
 CFLAGS += -Wall -Wextra -Werror -pedantic -Wno-unused-result -pedantic
 
-DEBUG_CFLAGS   ?= -Og -ggdb3 -fsanitize=address,undefined,leak 
+DEBUG_CFLAGS   ?= -Og -ggdb3 -fsanitize=address,undefined,leak
 RELEASE_CFLAGS ?= -O3 -flto
 
 ifeq ($(DEBUG), 1)
@@ -28,9 +29,9 @@ qemu: vmd
 
 docker: vmd
 	@printf $@": "
-	@docker build -qt $< .
+	@docker build -qt $< .|awk '!/:/ {print }' -
 	@docker run -it $<
-	@-docker rmi -f $<
+	@-docker rmi -f $<|awk '!/:/ {print }' -
 
 valgrind: vmd
 	@printf $@": "
