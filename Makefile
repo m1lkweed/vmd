@@ -1,4 +1,3 @@
-CC     := gcc
 CFLAGS += -Wall -Wextra -Werror -pedantic -Wno-unused-result -pedantic
 
 DEBUG_CFLAGS   ?= -Og -ggdb3 -fsanitize=address,undefined,leak
