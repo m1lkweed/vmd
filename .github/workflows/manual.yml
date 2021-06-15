@@ -18,4 +18,4 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: make
-      run: make gdb strace qemu valgrind
+      run: make gdb strace qemu valgrind run
