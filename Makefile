@@ -28,9 +28,10 @@ qemu: vmd
 
 docker: vmd
 	@printf $@": "
-	@docker build -qt $< .|awk '!/:/ {print }' -
+	@docker build -qt $< .>/dev/null
 	@docker run -it $<
-	@-docker rmi -f $<|awk '!/:/ {print }' -
+	@docker rm -fv $$(docker stop $$(docker ps -a|fgrep $<|cut -d' ' -f1))>/dev/null
+	@-docker rmi -f $<>/dev/null
 
 valgrind: vmd
 	@printf $@": "
