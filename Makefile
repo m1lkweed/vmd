@@ -25,7 +25,7 @@ ifdef GDB_EXISTS
 	@printf $@": "
 	@gdb -batch-silent -x gdbscript --args ./$< $(ARGS)
 else
-	@printf "Skipping test, gdb not found"
+	@printf "Skipping test, gdb not found\n"
 endif
 
 strace:vmd
@@ -33,7 +33,7 @@ ifdef STRACE_EXISTS
 	@printf $@": "
 	@strace ./$< 2>/dev/null
 else
-	@printf "Skipping test, strace not found"
+	@printf "Skipping test, strace not found\n"
 endif
 
 qemu: vmd
@@ -41,7 +41,7 @@ ifdef QEMU_EXISTS
 	@printf $@": "
 	@qemu-x86_64 -cpu max ./$<
 else
-	@printf "Skipping test, qemu not found"
+	@printf "Skipping test, qemu not found\n"
 endif
 
 docker: vmd
@@ -52,7 +52,7 @@ ifdef DOCKER_EXISTS
 	@docker rm -fv $$(docker stop $$(docker ps -a|fgrep $<|cut -d' ' -f1))>/dev/null
 	@-docker rmi -f $<>/dev/null
 else
-	@printf "Skipping test, docker not found"
+	@printf "Skipping test, docker not found\n"
 endif
 
 valgrind: vmd
@@ -60,7 +60,7 @@ ifdef VALGRIND_EXISTS
 	@printf $@": "
 	@valgrind ./$< 2>/dev/null
 else
-	@printf "Skipping test, valgrind not found"
+	@printf "Skipping test, valgrind not found\n"
 endif
 
 all: vmd strace qemu docker gdb valgrind
