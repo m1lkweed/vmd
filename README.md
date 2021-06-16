@@ -1,6 +1,5 @@
-# VM Detector
+# VM Detector [![build](https://github.com/m1lkweed/vmd/actions/workflows/build.yml/badge.svg)](https://github.com/m1lkweed/vmd/actions/workflows/build.yml)
 A small set of functions for RE detection on x86_64 Linux
-***
 ### Functions:
 * `vmd_vmdetect()`
 detects virtual machines via `cpuid` and `rdtscp`
