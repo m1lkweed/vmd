@@ -9,7 +9,7 @@ else
 CFLAGS += $(RELEASE_CFLAGS)
 endif
 
-.PHONY: clean all gdb qemu docker strace valgrind run
+.PHONY: clean test gdb qemu docker strace valgrind run
 
 GDB_EXISTS := $(shell command -v gdb 2> /dev/null)
 STRACE_EXISTS := $(shell command -v strace 2> /dev/null)
@@ -67,7 +67,7 @@ run: vmd
 	@printf $<": "
 	@./$<
 
-all: vmd strace qemu docker gdb valgrind
+test: vmd strace qemu docker gdb valgrind
 	@printf $<": "
 	@./$<
 

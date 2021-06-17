@@ -17,7 +17,7 @@ detects containerization via `getpid`
 Run `make` or simply include `vmd.h` in your project. Define `VMD_IMPLEMENTATION` somewhere in your program if you aren't using vmd from a library.
 
 #### Expected output from example:
-
+`make test`
 ```
 strace: Debugger detected
 qemu: VM detected
