@@ -67,9 +67,7 @@ run: vmd
 	@printf $<": "
 	@./$<
 
-test: vmd strace qemu docker gdb valgrind
-	@printf $<": "
-	@./$<
+test: vmd strace qemu docker gdb valgrind run
 
 clean: vmd
 	@-rm -vfr *~ $<
