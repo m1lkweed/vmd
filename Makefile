@@ -9,7 +9,7 @@ else
 CFLAGS += $(RELEASE_CFLAGS)
 endif
 
-.PHONY: clean test gdb qemu docker strace valgrind run
+.PHONY: clean test gdb qemu docker strace valgrind standalone
 
 GDB_EXISTS := $(shell command -v gdb 2> /dev/null)
 STRACE_EXISTS := $(shell command -v strace 2> /dev/null)
@@ -17,8 +17,8 @@ QEMU_EXISTS := $(shell command -v qemu-x86_64 2> /dev/null)
 DOCKER_EXISTS := $(shell command -v docker 2> /dev/null)
 VALGRIND_EXISTS := $(shell command -v valgrind 2> /dev/null)
 
-vmd: example.c
-	@$(CC) $(CFLAGS) -o $@ $<
+vmd: example.c vmd.h syscall.h
+	@$(CC) $(CFLAGS) -s -o $@ $<
 
 gdb: vmd
 ifdef GDB_EXISTS
@@ -63,11 +63,11 @@ else
 	@printf "Skipping test, valgrind not found\n"
 endif
 
-run: vmd
-	@printf $<": "
+standalone: vmd
+	@printf $@": "
 	@./$<
 
-test: vmd strace qemu docker gdb valgrind run
+test: vmd strace qemu docker gdb valgrind standalone
 
 clean: vmd
 	@-rm -vfr *~ $<

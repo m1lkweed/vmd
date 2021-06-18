@@ -22,6 +22,7 @@ bool vmd_incontainer(void);
 #include <inttypes.h>
 #include <sys/ptrace.h>
 #include <sys/sysinfo.h>
+#include <linux/limits.h>
 
 #include "syscall.h"
 
@@ -113,11 +114,26 @@ bool vmd_hardwaresus(void){
 	return (size <= 60); // < 60 GiB total on main drive
 }
 
+#define VMD_STR2(x) #x
+#define VMD_STR1(x) VMD_STR2(x)
+#define VMD_STR(x)  VMD_STR1(x)
 /*tries to detect containerization by pid*/
 bool vmd_incontainer(void){
+	int initpid;
+	char junk[NAME_MAX + 1];
+	FILE *d = fopen("/proc/1/sched", "rx");
+	if(d == NULL)
+		return true;
+	fscanf(d,"%" VMD_STR(NAME_MAX) "s (%d", junk, &initpid);
+	fclose(d);
+	if(initpid != 1)
+		return true;
 	ssize_t pid = syscall(SYS_getpid);
 	return (pid < 250);
 }
+#undef VMD_STR
+#undef VMD_STR1
+#undef VMD_STR2
 
 #endif //VMD_IMPLEMENTATION
 #endif //VMD_H_
