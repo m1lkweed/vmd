@@ -26,5 +26,5 @@ docker: Chroot detected
 Container detected
 gdb: Debugger detected
 valgrind: VM detected
-vmd: Nothing detected
+standalone: Nothing detected
 ```
