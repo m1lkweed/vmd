@@ -20,11 +20,24 @@ Run `make` or simply include `vmd.h` in your project. Define `VMD_IMPLEMENTATION
 `make test`
 ```
 strace: Debugger detected
+ltrace: Debugger detected
 qemu: VM detected
 Hypervisor detected
 docker: Chroot detected
 Container detected
 gdb: Debugger detected
 valgrind: VM detected
+firejail: Debugger detected
+Container detected
 standalone: Nothing detected
 ```
+#### More results:
+|command|result|
+|:---|:---|
+`lldb ./vmd`|`Debugger detected`
+`ddd ./vmd`|`Debugger detected`
+`./x64determiniser ./vmd`|`VM detected`	`Debugger detected`
+`edb --run ./vmd`|`Debugger detected`
+`nemiver ./vmd`|`Debugger detected`
+`radare2 -d ./vmd`|`Debugger detected`
+`rr record -n ./vmd`|`VM detected`	`Hardware has suspicious configuration`
