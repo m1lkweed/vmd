@@ -9,24 +9,18 @@ else
 CFLAGS += $(RELEASE_CFLAGS)
 endif
 
-.PHONY: clean test gdb qemu docker strace valgrind standalone
+.PHONY: clean test strace ltrace qemu docker gdb valgrind firejail standalone
 
-GDB_EXISTS := $(shell command -v gdb 2> /dev/null)
 STRACE_EXISTS := $(shell command -v strace 2> /dev/null)
+LTRACE_EXISTS := $(shell command -v ltrace 2> /dev/null)
 QEMU_EXISTS := $(shell command -v qemu-x86_64 2> /dev/null)
 DOCKER_EXISTS := $(shell command -v docker 2> /dev/null)
+GDB_EXISTS := $(shell command -v gdb 2> /dev/null)
 VALGRIND_EXISTS := $(shell command -v valgrind 2> /dev/null)
+FIREJAIL_EXISTS := $(shell command -v firejail 2> /dev/null)
 
 vmd: example.c vmd.h syscall.h
 	@$(CC) $(CFLAGS) -s -o $@ $<
-
-gdb: vmd
-ifdef GDB_EXISTS
-	@printf $@": "
-	@gdb -batch-silent -x gdbscript --args ./$< $(ARGS)
-else
-	@printf "Skipping test, gdb not found\n"
-endif
 
 strace:vmd
 ifdef STRACE_EXISTS
@@ -34,6 +28,14 @@ ifdef STRACE_EXISTS
 	@strace ./$< 2>/dev/null
 else
 	@printf "Skipping test, strace not found\n"
+endif
+
+ltrace:vmd
+ifdef LTRACE_EXISTS
+	@printf $@": "
+	@ltrace ./$< 2>/dev/null
+else
+	@printf "Skipping test, ltrace not found\n"
 endif
 
 qemu: vmd
@@ -55,6 +57,14 @@ else
 	@printf "Skipping test, docker not found\n"
 endif
 
+gdb: vmd
+ifdef GDB_EXISTS
+	@printf $@": "
+	@gdb -batch-silent -x gdbscript --args ./$< $(ARGS)
+else
+	@printf "Skipping test, gdb not found\n"
+endif
+
 valgrind: vmd
 ifdef VALGRIND_EXISTS
 	@printf $@": "
@@ -63,11 +73,19 @@ else
 	@printf "Skipping test, valgrind not found\n"
 endif
 
+firejail: vmd
+ifdef FIREJAIL_EXISTS
+	@printf $@": "
+	@firejail ./$< 2>/dev/null
+else
+	@printf "Skipping test, firejail not found\n"
+endif
+
 standalone: vmd
 	@printf $@": "
 	@./$<
 
-test: vmd strace qemu docker gdb valgrind standalone
+test: vmd strace ltrace qemu docker gdb valgrind firejail standalone
 
 clean: vmd
 	@-rm -vfr *~ $<
