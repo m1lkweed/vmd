@@ -1,7 +1,7 @@
 #ifndef INLINE_SYSCALL_H_
 #define INLINE_SYSCALL_H_
 
-#include <unistd.h>      //for intptr_t
+#include <stdint.h>      //for (u)intptr_t
 #include <sys/syscall.h> //for SYS_[name] definitions
 
 //This pre-processor block calls a different function

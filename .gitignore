@@ -35,6 +35,7 @@
 *.i*86
 *.x86_64
 *.hex
+*.com
 
 # Debug files
 *.dSYM/
@@ -53,4 +54,4 @@ dkms.conf
 
 # Misc.
 .vscode/*
-sonar-project.properties
+vmd
