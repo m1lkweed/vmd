@@ -1,7 +1,7 @@
 CFLAGS += -Wall -Wextra -Werror -pedantic -Wno-unused-result -pedantic
 
 DEBUG_CFLAGS   ?= -Og -ggdb3 -fsanitize=address,undefined,leak
-RELEASE_CFLAGS ?= -O3 -flto
+RELEASE_CFLAGS ?= -O3 -flto -s
 
 ifeq ($(DEBUG), 1)
 CFLAGS += $(DEBUG_CFLAGS)
@@ -20,7 +20,7 @@ VALGRIND_EXISTS := $(shell command -v valgrind 2> /dev/null)
 FIREJAIL_EXISTS := $(shell command -v firejail 2> /dev/null)
 
 vmd: example.c vmd.h syscall.h
-	@$(CC) $(CFLAGS) -s -o $@ $<
+	@$(CC) $(CFLAGS) -o $@ $<
 
 strace:vmd
 ifdef STRACE_EXISTS
