@@ -21,6 +21,7 @@ bool vmd_incontainer(void);
 #include <sys/stat.h>
 #include <inttypes.h>
 #include <sys/ptrace.h>
+#include <sys/statvfs.h>
 #include <sys/sysinfo.h>
 #include <linux/limits.h>
 
@@ -96,6 +97,7 @@ bool vmd_inchroot(void){
 /*tries to detect VMs by very low hardware specs*/
 bool vmd_hardwaresus(void){
 	struct sysinfo a;
+	struct statvfs b;
 	uint64_t size;
 	if(sysconf(_SC_NPROCESSORS_CONF) < 2)
 		return true;
@@ -104,13 +106,9 @@ bool vmd_hardwaresus(void){
 		return true;
 	if(a.uptime < (5 * 60)) // < 5 minutes of uptime
 		return true;
-	FILE *d = fopen("/sys/class/block/sda/size", "rx");
-	if(d == NULL)
-		return true; //treat live CDs as suspect
-	fscanf(d,"%"SCNu64, &size);
-	fclose(d);
-	size *= 512;
-	size /= 1024UL * 1024UL * 1024UL;
+	statvfs("/", &b);
+	size = b.f_frsize * b.f_blocks;
+	size /= 1024UL * 1024UL * 1024UL; // size to GiB
 	return (size <= 60); // < 60 GiB total on main drive
 }
 
