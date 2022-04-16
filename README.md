@@ -6,7 +6,7 @@ detects virtual machines via `cpuid` and `rdtscp`
 * `vmd_hvdetect()`
 detects hypervisors via `cpuid`
 * `vmd_dbgpresent()`
-detects debuggers via `ptrace`
+detects debuggers via address layout and `ptrace`
 * `vmd_inchroot()`
 detects chroots via `inode`
 * `vmd_hardwaresus()`
@@ -23,6 +23,7 @@ strace: Debugger detected
 ltrace: Debugger detected
 qemu: VM detected
 Hypervisor detected
+Debugger detected
 docker: Chroot detected
 Container detected
 gdb: Debugger detected
