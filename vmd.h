@@ -3,6 +3,7 @@
 #ifndef VMD_H_
 #define VMD_H_
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 bool vmd_vmdetect(void);
