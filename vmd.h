@@ -1,4 +1,4 @@
-// (c)m1lkweed 2021 GPLv3+
+// (c)m1lkweed 2021-2022 GPLv3+
 
 #ifndef VMD_H_
 #define VMD_H_
@@ -74,6 +74,10 @@ bool vmd_hvdetect(void){
 /*double self-trace to detect/prevent debuggers LD_PRELOAD*/
 //TODO: In kernel 5.11 syscalls can now be captured, we should try reading from memory to confirm attachment.
 bool vmd_dbgpresent(void){
+	static unsigned char bss;
+	unsigned char *probe = malloc(0x10);
+	if(probe - &bss < 0x20000)
+		return true;
 	int failsafe = 0;
 	if((syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1))
 		failsafe = 2;
