@@ -34,6 +34,14 @@ bool vmd_vmdetect(void){
 	unsigned long long t0, t1;
 	unsigned junk = 0;
 	double fjunk = 0;
+	volatile struct{
+		int64_t base;
+		int16_t offset;
+	} a[2] = {0};
+	asm("sgdt %0":"=m"(a[0])::);
+	asm("sidt %0":"=m"(a[1])::);
+	if(((a[0].offset == 0) || (a[0].base > 0)) || ((a[1].offset == 0) || (a[1].base > 0)))
+		return true;
 	/*small address filter so valgrind doesn't reach the SIGILL*/
 	if(&t0 < (unsigned long long*)0x7ff000000000)
 		return true;
