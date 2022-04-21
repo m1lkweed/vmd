@@ -85,7 +85,9 @@ bool vmd_hvdetect(void){
 bool vmd_dbgpresent(void){
 	static unsigned char bss;
 	unsigned char *probe = malloc(0x10);
-	if(probe - &bss < 0x20000)
+	bool ret = (probe - &bss < 0x20000);
+	free(probe);
+	if(ret)
 		return true;
 	int failsafe = 0;
 	if((syscall(SYS_ptrace, PTRACE_TRACEME, 0, 0, 0) == -1))
