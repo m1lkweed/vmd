@@ -106,7 +106,8 @@ bool vmd_inchroot(void){
 	struct stat a;
 	char *dir = "/";
 	syscall(SYS_stat, (size_t)dir, (size_t)&a);
-	return (a.st_ino != 2);
+	//TODO: only check for inode of 256 on btrfs
+	return !((a.st_ino == 2) || (a.st_ino == 256));
 }
 
 /*tries to detect VMs by very low hardware specs*/
