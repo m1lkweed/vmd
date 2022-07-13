@@ -33,6 +33,7 @@ bool vmd_incontainer(void);
 bool vmd_vmdetect(void){
 	unsigned long long t0, t1;
 	unsigned junk = 0;
+	unsigned char jarr[10] = {0};
 	double fjunk = 0;
 	volatile struct{
 		int64_t base;
@@ -56,7 +57,7 @@ bool vmd_vmdetect(void){
 	unsigned long long cpuid_time = t1 - t0;
 	t0 = __builtin_ia32_rdtscp(&junk);
 	__asm volatile("fbstp %0"
-	              :"=m" (junk)
+	              :"=m" (jarr)
 	              :"t" (fjunk)
 	              :"st"
 	);
