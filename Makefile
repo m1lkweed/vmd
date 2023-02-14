@@ -1,4 +1,4 @@
-CFLAGS += -Wall -Wextra -Werror -pedantic -Wno-unused-result -pedantic
+CFLAGS += -Wall -Wextra -Werror -pedantic -Wno-unused-result
 
 DEBUG_CFLAGS   ?= -O0 -ggdb3 -fsanitize=address,undefined,leak
 RELEASE_CFLAGS ?= -O3 -flto -s
