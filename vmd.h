@@ -126,7 +126,7 @@ bool vmd_hardwaresus(void){
 	statvfs("/", &b);
 	size = b.f_frsize * b.f_blocks;
 	size /= 1024UL * 1024UL * 1024UL; // size to GiB
-	return (size <= 60); // < 60 GiB total on main drive
+	return (size <= 14); // < 14 GiB total on main drive
 }
 
 #define VMD_STR2(x) #x
