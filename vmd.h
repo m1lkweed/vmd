@@ -88,7 +88,7 @@ bool vmd_dbgpresent(void){
 	unsigned char *probe = malloc(0x10);
 	bool ret = (probe - &bss < 0x20000);
 	extern char etext, __executable_start;
-	if(((uintptr_t)(&etext) == (uintptr)0x55555555546d) || ((uintptr_t)(&__executable_start) == (uintptr)0x555555554000))
+	if(((uintptr_t)(&etext) == (uintptr)(0x55555555546d)) || ((uintptr_t)(&__executable_start) == (uintptr)(0x555555554000)))
 		return true;
 	free(probe);
 	if(ret)
