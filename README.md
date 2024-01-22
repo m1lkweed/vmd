@@ -42,3 +42,4 @@ standalone: Nothing detected
 `nemiver ./vmd`|`Debugger detected`
 `radare2 -d ./vmd`|`Debugger detected`
 `rr record -n ./vmd`|`VM detected`	`Hardware has suspicious configuration`
+`wine ./vmd.exe`|`VM detected`	`Debugger detected`
